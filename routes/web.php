@@ -67,6 +67,10 @@ Route::get('/components/filterbox', function () {
     return view('components.filterbox');
 });
 
+Route::get('/auth/login', function () {
+    return view('auth.login');
+});
+
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');

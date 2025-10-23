@@ -205,7 +205,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Sidebar Dokumen
     const dokumenToggle = document.getElementById("dokumenToggle");
-    const submenuDokumen = document.getElementById("submenuDokumen");
+const submenuDokumen = document.getElementById("submenuDokumen");
+
+if (dokumenToggle && submenuDokumen) {
     const chevron = dokumenToggle.querySelector(".bi-chevron-down");
 
     dokumenToggle.addEventListener("click", function () {
@@ -213,11 +215,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Rotasi panah
         if (submenuDokumen.classList.contains("show")) {
-            chevron.style.transform = "rotate(180deg)";
+            if (chevron) chevron.style.transform = "rotate(180deg)";
         } else {
-            chevron.style.transform = "rotate(0deg)";
+            if (chevron) chevron.style.transform = "rotate(0deg)";
         }
     });
+}
+    // const dokumenToggle = document.getElementById("dokumenToggle");
+    // const submenuDokumen = document.getElementById("submenuDokumen");
+    // const chevron = dokumenToggle.querySelector(".bi-chevron-down");
+
+    // dokumenToggle.addEventListener("click", function () {
+    //     submenuDokumen.classList.toggle("show");
+
+    //     // Rotasi panah
+    //     if (submenuDokumen.classList.contains("show")) {
+    //         chevron.style.transform = "rotate(180deg)";
+    //     } else {
+    //         chevron.style.transform = "rotate(0deg)";
+    //     }
+    // });
 
 
     // ==============================
