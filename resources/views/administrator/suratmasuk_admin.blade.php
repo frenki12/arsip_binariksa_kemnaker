@@ -67,6 +67,9 @@
             </div>
         </div>
 
+        <!-- Search + Filter -->
+        @include('components.filterbox')
+
         {{-- Field Surat Terbaru --}}
         <div class="card card-stat p-3 mt-4">
             <h6 class="mb-3">Daftar Surat masuk</h6>
