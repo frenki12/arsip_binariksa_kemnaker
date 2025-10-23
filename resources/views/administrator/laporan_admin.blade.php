@@ -38,15 +38,39 @@
                 </button>
             </div>
         </div>
-        <h5 class="fw-bold">Laporan</h5>
-        <p class="text-muted mb-4">Statistik dan analisis data surat</p>
 
         <!-- Filter -->
-        <div class="text-end mt-3">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <!-- Judul -->
+            <div>
+                <h5 class="fw-bold mb-1">Laporan</h5>
+                <small class="text-muted">Statistik dan Analisis Data Surat</small>
+            </div>
+
+            <!-- Aksi -->
+            <div class="d-flex gap-2">
+                <!-- Export Excel -->
+                <a href="#" class="btn btn-outline-success">
+                    <i class="bi bi-file-earmark-excel me-2"></i> Download Excel
+                </a>
+
+                <!-- Export PDF -->
+                <a href="#" class="btn btn-outline-danger">
+                    <i class="bi bi-file-earmark-pdf me-2"></i> Download PDF
+                </a>
+            </div>
+        </div>
+
+
+        {{-- <div class="text-end mt-3">
             <button class="btn btn-outline-secondary me-2">Download PDF</button>
             <button class="btn btn-outline-success">Download Excel</button>
-        </div>
-        <div class="card mb-4">
+        </div> --}}
+
+        <!-- Search + Filter -->
+        @include('components.filterbox_laporan')
+
+        {{-- <div class="card mb-4">
             <div class="card-body">
                 <div class="row g-3 align-items-end">
                     <div class="col-md-4">
@@ -78,7 +102,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Chart Section -->
         <!-- Charts -->
@@ -104,52 +128,49 @@
         </div>
 
         <div class="row text-center">
-    <div class="col-md-3">
-        <div class="card bg-danger text-white shadow-sm p-3">
-            <h5>Belum Ditindaklanjuti</h5>
-            <h3>{{ $belum ?? 12 }}</h3>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card bg-warning text-dark shadow-sm p-3">
-            <h5>Dalam Tindak Lanjut</h5>
-            <h3>{{ $proses ?? 7 }}</h3>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card bg-success text-white shadow-sm p-3">
-            <h5>Selesai</h5>
-            <h3>{{ $selesai ?? 21 }}</h3>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card bg-secondary text-white shadow-sm p-3">
-            <h5>Surat Non Resmi</h5>
-            <h3>{{ $nonresmi ?? 4 }}</h3>
-        </div>
-    </div>
-    <div class="card shadow-sm p-4 mx-auto text-center" style="max-width: 600px;">
-        <div style="height: 500px;">
-            <canvas id="statusSuratChart"
-                data-belum="{{ $belum ?? 12 }}"
-                data-proses="{{ $proses ?? 7 }}"
-                data-selesai="{{ $selesai ?? 21 }}"
-                data-nonresmi="{{ $nonresmi ?? 4 }}">
-            </canvas>
-        </div>
-    </div>
+            <div class="col-md-3">
+                <div class="card bg-danger text-white shadow-sm p-3">
+                    <h5>Belum Ditindaklanjuti</h5>
+                    <h3>{{ $belum ?? 12 }}</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-dark shadow-sm p-3">
+                    <h5>Dalam Tindak Lanjut</h5>
+                    <h3>{{ $proses ?? 7 }}</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white shadow-sm p-3">
+                    <h5>Selesai</h5>
+                    <h3>{{ $selesai ?? 21 }}</h3>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-secondary text-white shadow-sm p-3">
+                    <h5>Surat Non Resmi</h5>
+                    <h3>{{ $nonresmi ?? 4 }}</h3>
+                </div>
+            </div>
+            <div class="card shadow-sm p-4 mx-auto text-center" style="max-width: 600px;">
+                <div style="height: 500px;">
+                    <canvas id="statusSuratChart" data-belum="{{ $belum ?? 12 }}" data-proses="{{ $proses ?? 7 }}"
+                        data-selesai="{{ $selesai ?? 21 }}" data-nonresmi="{{ $nonresmi ?? 4 }}">
+                    </canvas>
+                </div>
+            </div>
 
-</div>
-
-<div class="container mt-4">
-    <h4 class="fw-bold mb-4 text-center">Laporan Jumlah Surat Masuk per Bulan</h4>
-
-    <div class="card shadow-sm p-4 mx-auto" style="max-width: 800px;">
-        <div style="height: 350px;"> <!-- Tinggi chart diatur di sini -->
-            <canvas id="grafikSuratPerBulan"></canvas>
         </div>
-    </div>
-</div>
+
+        <div class="container mt-4">
+            <h4 class="fw-bold mb-4 text-center">Laporan Jumlah Surat Masuk per Bulan</h4>
+
+            <div class="card shadow-sm p-4 mx-auto" style="max-width: 800px;">
+                <div style="height: 350px;"> <!-- Tinggi chart diatur di sini -->
+                    <canvas id="grafikSuratPerBulan"></canvas>
+                </div>
+            </div>
+        </div>
 
 
 

@@ -342,3 +342,84 @@ body {
 #submenuDokumen {
     padding-left: 1rem;
 }
+
+/* === KARTU STATISTIK DASHBOARD === */
+.card-feature {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: all 0.25s ease-in-out;
+    cursor: pointer;
+    height: 100%;
+}
+
+.card-feature:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.icon-wrapper-with-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-wrapper-with-text img {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease;
+}
+
+.card-feature:hover img {
+    transform: scale(1.1);
+}
+
+.icon-text h6 {
+    font-size: 0.95rem;
+    color: #6c757d;
+}
+
+.icon-text h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #0d6efd;
+}
+
+/* Warna berbeda per kategori (opsional) */
+.card-feature:nth-child(1) img {
+    background: #e9f2ff;
+    border-radius: 14px;
+    padding: 10px;
+}
+
+.card-feature:nth-child(2) img {
+    background: #e9fff3;
+    border-radius: 14px;
+    padding: 10px;
+}
+
+.card-feature:nth-child(3) img {
+    background: #fff5e9;
+    border-radius: 14px;
+    padding: 10px;
+}
+
+.card-feature:nth-child(4) img {
+    background: #f8e9ff;
+    border-radius: 14px;
+    padding: 10px;
+}
+
+/* Responsif */
+@media (max-width: 768px) {
+    .card-feature {
+        padding: 1.2rem;
+    }
+
+    .icon-text h3 {
+        font-size: 1.3rem;
+    }
+}
+
