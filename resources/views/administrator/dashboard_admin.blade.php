@@ -46,27 +46,62 @@
             <div class="col-lg-3 col-md-4 col-sm-6 col-12">
                 <div
                     class="card card-feature text-center border-0 d-flex align-items-center justify-content-center flex-column p-3">
-                    <div class="icon-wrapper-with-text mb-2">
-                        <img src="/img/letter.svg" alt="Icon Surat" width="40" height="40" class="mb-1">
-                        <div class="icon-text">
-                            <h6 class="fw-semibold mb-0">Total Surat</h6>
-                            <h3 class="mb-0">1,284</h3>
+                    <a href="{{ route('dokumen.divisi', 'semua') }}" class="text-decoration-none text-dark">
+
+
+                        <div class="icon-wrapper-with-text mb-2 cursor-pointer">
+                            <img src="/img/letter.svg" alt="Icon Surat" width="40" height="40" class="mb-1">
+
+                            <div class="icon-text">
+                                <h6 class="fw-semibold mb-0">Total Surat</h6>
+                                <h3 class="mb-0">{{ $totalSurat ?? 0 }}</h3>
+                            </div>
                         </div>
-                    </div>
-                    <small class="text-success">↑ 12% dari bulan lalu</small>
+                    </a>
+
+                    @if ($persenNaik > 0)
+                        <small class="text-success">
+                            ↑ {{ $persenNaik }}% dari bulan lalu
+                        </small>
+                    @elseif ($persenNaik < 0)
+                        <small class="text-danger">
+                            ↓ {{ abs($persenNaik) }}% dari bulan lalu
+                        </small>
+                    @else
+                        <small class="text-muted">
+                            Tidak ada perubahan dari bulan lalu
+                        </small>
+                    @endif
+
                 </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 col-12">
                 <div
                     class="card card-feature text-center border-0 d-flex align-items-center justify-content-center flex-column p-3">
-                    <div class="icon-wrapper-with-text mb-2">
-                        <img src="/img/folder2.svg" alt="Icon Surat" width="40" height="40" class="mb-1">
-                        <div class="icon-text">
-                            <h6 class="fw-semibold mb-0">Total Folder</h6>
-                            <h3 class="mb-0">156</h3>
+                    <a href="{{ route('folder_admin') }}" class="text-decoration-none text-dark">
+                        <div class="icon-wrapper-with-text mb-2">
+                            <img src="/img/folder2.svg" alt="Icon Surat" width="40" height="40" class="mb-1">
+                            <div class="icon-text">
+                                <h6 class="fw-semibold mb-0">Total Folder</h6>
+                                <h3 class="mb-0">{{ $totalFolder ?? 0 }}</h3>
+                            </div>
                         </div>
-                    </div>
-                    <small class="text-success">↑ 5% dari bulan lalu</small>
+                    </a>
+
+                    @if ($persenNaik > 0)
+                        <small class="text-success">
+                            ↑ {{ $persenNaik }}% dari bulan lalu
+                        </small>
+                    @elseif ($persenNaik < 0)
+                        <small class="text-danger">
+                            ↓ {{ abs($persenNaik) }}% dari bulan lalu
+                        </small>
+                    @else
+                        <small class="text-muted">
+                            Tidak ada perubahan dari bulan lalu
+                        </small>
+                    @endif
+
                 </div>
             </div>
 
@@ -77,7 +112,7 @@
                         <img src="/img/letter_done.svg" alt="Surat Done" width="40" height="40" class="mb-1">
                         <div class="icon-text">
                             <h6 class="fw-semibold mb-0">Selesai</h6>
-                            <h3 class="mb-0">156</h3>
+                            <h3 class="mb-0">{{ $Selesai ?? 0 }}</h3>
                         </div>
                     </div>
                 </div>
@@ -90,48 +125,11 @@
                         <img src="/img/pending.svg" alt="Surat Done" width="40" height="40" class="mb-1">
                         <div class="icon-text">
                             <h6 class="fw-semibold mb-0">Pending</h6>
-                            <h3 class="mb-0">392</h3>
+                            <h3 class="mb-0">{{ $pending ?? 0 }}</h3>
                         </div>
                     </div>
                 </div>
             </div>
-            
-
-            {{-- <div class="col-md-3">
-                <div class="card card-stat p-3 h-100 text-center d-flex flex-column align-items-center justify-content-center">
-                    <img src="/img/letter.svg" alt="Icon Surat" width="80" height="80" class="mb-2">
-                    <h6>Total Surat</h6>
-                    <h3>1,284</h3>
-                    <small class="text-success">↑ 12% dari bulan lalu</small>
-                </div>
-            </div> --}}
-
-            {{-- <div class="col-md-3">
-                <div class="card card-stat p-3 h-100">
-                    <h6>Total Surat</h6>
-                    <h3>1,284</h3>
-                    <small class="text-success">↑ 12% dari bulan lalu</small>
-                </div>
-            </div> --}}
-            {{-- <div class="col-md-3">
-                <div class="card card-stat p-3 h-100">
-                    <h6>Total Folder</h6>
-                    <h3>156</h3>
-                    <small class="text-success">↑ 5% dari bulan lalu</small>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card card-stat p-3 h-100">
-                    <h6>Selesai</h6>
-                    <h3>892</h3>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card card-stat p-3 h-100">
-                    <h6>Pending</h6>
-                    <h3>392</h3>
-                </div>
-            </div> --}}
         </div>
 
 
@@ -158,74 +156,74 @@
         </div>
 
         {{-- Field Surat Terbaru --}}
-        <div class="card card-stat p-3 mt-4">
-            <h6 class="mb-3">Daftar Arsip Surat</h6>
-            <div class="table-scroll-wrapper">
-                <table class="table table-bordered align-middle text-center">
-                    <thead class="table-secondary align-middle">
-                        <tr>
-                            <th rowspan="2">Nomor Berkas</th>
-                            <th rowspan="2">Nomor Item Arsip</th>
-                            <th rowspan="2">Kode Klasifikasi</th>
-                            <th colspan="6">Judul Item Arsip</th>
-                            <th rowspan="2">Jumlah (lembar)</th>
-                            <th rowspan="2">Tingkat Perkembangan</th>
-                            <th rowspan="2">Klasifikasi Keamanan</th>
-                            <th rowspan="2">Hak Akses</th>
-                            <th rowspan="2">Akses Publik</th>
-                            <th rowspan="2">Dasar Pertimbangan</th>
-                            <th rowspan="2">Ket. (link tautan)</th>
-                        </tr>
-                        <tr>
-                            <th>Nomor Surat</th>
-                            <th>Tanggal</th>
-                            <th>Jenis Surat</th>
-                            <th>Dari</th>
-                            <th>Ke</th>
-                            <th>Perihal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>001</td>
-                            <td>01/2024</td>
-                            <td>K3</td>
-                            <td>123/K3/2024</td>
-                            <td>2024-01-10</td>
-                            <td>Surat Masuk</td>
-                            <td>PT Maju Jaya</td>
-                            <td>Disnaker</td>
-                            <td>Permohonan Izin</td>
-                            <td>3</td>
-                            <td>Selesai</td>
-                            <td>Rahasia</td>
-                            <td>Internal</td>
-                            <td>Tidak</td>
-                            <td>UU Ketenagakerjaan</td>
-                            <td><a href="#" class="text-primary text-decoration-none">Lihat</a></td>
-                        </tr>
-                        <tr>
-                            <td>002</td>
-                            <td>02/2024</td>
-                            <td>HUBKER</td>
-                            <td>124/HUBKER/2024</td>
-                            <td>2024-01-12</td>
-                            <td>Surat Keluar</td>
-                            <td>Disnaker</td>
-                            <td>PT Sejahtera</td>
-                            <td>Balasan Pengaduan</td>
-                            <td>2</td>
-                            <td>Proses</td>
-                            <td>Terbuka</td>
-                            <td>Publik</td>
-                            <td>Ya</td>
-                            <td>Peraturan No. 5/2024</td>
-                            <td><a href="#" class="text-primary text-decoration-none">Lihat</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        {{-- <div class="card card-stat p-3 mt-4">
+        <h6 class="mb-3">Daftar Arsip Surat</h6>
+        <div class="table-scroll-wrapper">
+            <table class="table table-bordered align-middle text-center">
+                <thead class="table-secondary align-middle">
+                    <tr>
+                        <th rowspan="2">Nomor Berkas</th>
+                        <th rowspan="2">Nomor Item Arsip</th>
+                        <th rowspan="2">Kode Klasifikasi</th>
+                        <th colspan="6">Judul Item Arsip</th>
+                        <th rowspan="2">Jumlah (lembar)</th>
+                        <th rowspan="2">Tingkat Perkembangan</th>
+                        <th rowspan="2">Klasifikasi Keamanan</th>
+                        <th rowspan="2">Hak Akses</th>
+                        <th rowspan="2">Akses Publik</th>
+                        <th rowspan="2">Dasar Pertimbangan</th>
+                        <th rowspan="2">Ket. (link tautan)</th>
+                    </tr>
+                    <tr>
+                        <th>Nomor Surat</th>
+                        <th>Tanggal</th>
+                        <th>Jenis Surat</th>
+                        <th>Dari</th>
+                        <th>Ke</th>
+                        <th>Perihal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>001</td>
+                        <td>01/2024</td>
+                        <td>K3</td>
+                        <td>123/K3/2024</td>
+                        <td>2024-01-10</td>
+                        <td>Surat Masuk</td>
+                        <td>PT Maju Jaya</td>
+                        <td>Disnaker</td>
+                        <td>Permohonan Izin</td>
+                        <td>3</td>
+                        <td>Selesai</td>
+                        <td>Rahasia</td>
+                        <td>Internal</td>
+                        <td>Tidak</td>
+                        <td>UU Ketenagakerjaan</td>
+                        <td><a href="#" class="text-primary text-decoration-none">Lihat</a></td>
+                    </tr>
+                    <tr>
+                        <td>002</td>
+                        <td>02/2024</td>
+                        <td>HUBKER</td>
+                        <td>124/HUBKER/2024</td>
+                        <td>2024-01-12</td>
+                        <td>Surat Keluar</td>
+                        <td>Disnaker</td>
+                        <td>PT Sejahtera</td>
+                        <td>Balasan Pengaduan</td>
+                        <td>2</td>
+                        <td>Proses</td>
+                        <td>Terbuka</td>
+                        <td>Publik</td>
+                        <td>Ya</td>
+                        <td>Peraturan No. 5/2024</td>
+                        <td><a href="#" class="text-primary text-decoration-none">Lihat</a></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+    </div> --}}
     </div>
 
 </body>

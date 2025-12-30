@@ -9,30 +9,38 @@ use Laravel\Socialite\Facades\Socialite;
 
 class GoogleController extends Controller
 {
+    // Arahkan user ke halaman login Google
     public function redirectToGoogle()
     {
         return Socialite::driver('google')->redirect();
     }
 
+    // Callback dari Google setelah login berhasil
     public function handleGoogleCallback()
     {
         try {
             $googleUser = Socialite::driver('google')->user();
 
-            $user = User::updateOrCreate(
-                ['email' => $googleUser->getEmail()],
-                [
-                    'name' => $googleUser->getName(),
-                    'google_id' => $googleUser->getId(),
-                    'avatar' => $googleUser->getAvatar(),
-                    'password' => null,
-                ]
-            );
+            // Cek apakah user sudah ada di database
+            $user = User::where('email', $googleUser->getEmail())->first();
 
+            if (!$user) {
+                // Jika belum ada, buat user baru
+                $user = User::create([
+                    'name' => $googleUser->getName(),
+                    'email' => $googleUser->getEmail(),
+                    'password' => bcrypt('google_login_' . $googleUser->getId()),
+                ]);
+            }
+
+            // Login user
             Auth::login($user);
-            return redirect('/dashboard');
+
+            // Redirect ke dashboard
+            return redirect()->route('dashboard_admin');
+
         } catch (\Exception $e) {
-            return redirect('/login')->with('error', 'Gagal login dengan Google.');
+            return redirect('/login')->withErrors(['msg' => 'Login Google gagal, coba lagi.']);
         }
     }
 }

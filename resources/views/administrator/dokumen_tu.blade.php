@@ -26,7 +26,7 @@
                 <button class="btn btn-outline-secondary btn-sm me-3" id="toggleSidebar">
                     <i class="bi bi-list"></i>
                 </button>
-                <h4 class="mb-0 fw-bold">DOKUMEN SEMUA SURAT</h4>
+                <h4 class="mb-0 fw-bold">DOKUMEN TU</h4>
             </div>
             <div class="d-flex align-items-center">
                 <button class="btn btn-light btn-sm me-2">
@@ -42,7 +42,7 @@
         <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
             <!-- Judul -->
             <div>
-                <h5 class="fw-bold mb-1">Dokumen Semua Surat </h5>
+                <h5 class="fw-bold mb-1">Dokumen Surat TU</h5>
                 <small class="text-muted">Kelola semua dokumen dan surat</small>
             </div>
 
@@ -69,7 +69,7 @@
             </div>
         </div>
 
-
+        
 
         <!-- Modal Tambah Dokumen -->
         <div class="modal fade" id="tambahSuratMasukModal" tabindex="-1">
@@ -83,8 +83,7 @@
 
                     <form action="{{ route('arsip.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" name="divisi" value="semua">
-
+                        <input type="hidden" name="divisi" value="tu">
 
                         <div class="modal-body">
 
@@ -283,7 +282,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($arsip as $item)
+                    @forelse ($arsip->where('divisi', 'TU') as $item)
                         <tr>
                             <td>{{ $item->nomor_berkas }}</td>
                             <td>{{ $item->nomor_item_arsip }}</td>
@@ -321,13 +320,7 @@
                                 </a>
                             </td>
 
-                            <td>
-                                @if ($item->folder_id == null)
-                                    Belum di Folder
-                                @else
-                                    {{ $item->folder->nama_perusahaan }} - {{ $item->folder->nama_kasus }}
-                                @endif
-                            </td>
+                            <td>{{ $item->status_folder }}</td>
 
                             <td>
                                 @if ($item->status_kasus == 'Pending')
@@ -368,249 +361,221 @@
                                     </ul>
                                 </div>
                             </td>
-
+                            
                             <!-- Modal Edit Arsip -->
-                            <div class="modal fade" id="modalEdit{{ $item->id }}" tabindex="-1">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
+        <div class="modal fade" id="modalEdit{{ $item->id }}" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
 
-                                        <div class="modal-header">
-                                            <h5 class="modal-title fw-bold">Edit Arsip</h5>
-                                            <button class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold">Edit Arsip</h5>
+                        <button class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
 
-                                        <form action="{{ route('arsip.update', $item->id) }}" method="POST"
-                                            enctype="multipart/form-data">
-                                            @csrf
-                                            @method('PUT')
-                                            <input type="hidden" name="divisi" value="{{ $item->divisi }}">
-
+                    <form action="{{ route('arsip.update', $item->id) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="divisi" value="{{ $item->divisi }}">
 
 
-                                            <div class="modal-body">
 
-                                                <div class="row mb-3">
-                                                    <div class="col-md-6">
-                                                        <label>Nomor Berkas</label>
-                                                        <input name="nomor_berkas" type="text"
-                                                            class="form-control" value="{{ $item->nomor_berkas }}">
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label>Nomor Item Arsip</label>
-                                                        <input name="nomor_item_arsip" type="text"
-                                                            class="form-control"
-                                                            value="{{ $item->nomor_item_arsip }}">
-                                                    </div>
-                                                </div>
+                        <div class="modal-body">
 
-                                                <h6>KODE KLASIFIKASI</h6>
-                                                <div class="row mb-3">
-                                                    <div class="col-md-6">
-                                                        <label>Kode</label>
-                                                        <input name="kode_klasifikasi" type="text"
-                                                            class="form-control"
-                                                            value="{{ $item->kode_klasifikasi }}">
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label>Nama Klasifikasi</label>
-                                                        <input name="nama_klasifikasi" type="text"
-                                                            class="form-control"
-                                                            value="{{ $item->nama_klasifikasi }}">
-                                                    </div>
-                                                </div>
-
-                                                <h6>JUDUL ITEM ARSIP</h6>
-                                                <div class="row mb-3">
-                                                    <div class="col-md-4">
-                                                        <label>Nomor Surat</label>
-                                                        <input name="nomor_surat" type="text" class="form-control"
-                                                            value="{{ $item->nomor_surat }}">
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label>Tanggal</label>
-                                                        <input name="tanggal_surat" type="date"
-                                                            class="form-control" value="{{ $item->tanggal_surat }}">
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label>Jenis Surat</label>
-                                                        <select name="jenis_surat" class="form-select">
-                                                            <option value="Surat Masuk"
-                                                                {{ $item->jenis_surat == 'Surat Masuk' ? 'selected' : '' }}>
-                                                                Surat Masuk
-                                                            </option>
-                                                            <option value="Surat Dinas"
-                                                                {{ $item->jenis_surat == 'Surat Dinas' ? 'selected' : '' }}>
-                                                                Surat Dinas
-                                                            </option>
-                                                            <option value="NP"
-                                                                {{ $item->jenis_surat == 'NP' ? 'selected' : '' }}>Nota
-                                                                Pemeriksaan</option>
-                                                            <option value="SPT"
-                                                                {{ $item->jenis_surat == 'SPT' ? 'selected' : '' }}>
-                                                                Surat Perintah Tugas</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="row mb-3">
-                                                    <div class="col-md-6">
-                                                        <label>Dari</label>
-                                                        <input name="dari" type="text" class="form-control"
-                                                            value="{{ $item->dari }}">
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label>Ke</label>
-                                                        <input name="ke" type="text" class="form-control"
-                                                            value="{{ $item->ke }}">
-                                                    </div>
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label>Perihal</label>
-                                                    <input name="perihal" type="text" class="form-control"
-                                                        value="{{ $item->perihal }}">
-                                                </div>
-
-                                                <div class="row mb-3">
-                                                    <div class="col-md-4">
-                                                        <label>Jumlah Lembar</label>
-                                                        <input name="jumlah_lembar" type="number"
-                                                            class="form-control" value="{{ $item->jumlah_lembar }}">
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label>Tingkat Perkembangan</label>
-                                                        <select name="tingkat_perkembangan" class="form-select">
-                                                            <option value="Asli"
-                                                                {{ $item->tingkat_perkembangan == 'Asli' ? 'selected' : '' }}>
-                                                                Asli</option>
-                                                            <option value="Copy"
-                                                                {{ $item->tingkat_perkembangan == 'Copy' ? 'selected' : '' }}>
-                                                                Copy</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label>Klasifikasi Keamanan</label>
-                                                        <select name="klasifikasi_keamanan" class="form-select">
-                                                            <option value="Biasa"
-                                                                {{ $item->klasifikasi_keamanan == 'Biasa' ? 'selected' : '' }}>
-                                                                Biasa
-                                                            </option>
-                                                            <option value="Rahasia"
-                                                                {{ $item->klasifikasi_keamanan == 'Rahasia' ? 'selected' : '' }}>
-                                                                Rahasia
-                                                            </option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="row mb-3">
-                                                    <div class="col-md-4">
-                                                        <label>Hak Akses</label>
-                                                        <select name="hak_akses" class="form-select">
-                                                            <option value="Internal"
-                                                                {{ $item->hak_akses == 'Internal' ? 'selected' : '' }}>
-                                                                Internal</option>
-                                                            <option value="Publik"
-                                                                {{ $item->hak_akses == 'Publik' ? 'selected' : '' }}>
-                                                                Publik</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label>Akses Publik</label>
-                                                        <select name="akses_publik" class="form-select">
-                                                            <option value="Ya"
-                                                                {{ $item->akses_publik == 'Ya' ? 'selected' : '' }}>Ya
-                                                            </option>
-                                                            <option value="Tidak"
-                                                                {{ $item->akses_publik == 'Tidak' ? 'selected' : '' }}>
-                                                                Tidak</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label>Dasar Pertimbangan</label>
-                                                        <input name="dasar_pertimbangan" class="form-control"
-                                                            value="{{ $item->dasar_pertimbangan }}">
-                                                    </div>
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label>Link Tautan</label>
-                                                    <input name="link_tautan" type="text" class="form-control"
-                                                        value="{{ $item->link_tautan }}">
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label>Status Folder</label>
-                                                    <select name="folder_id" class="form-select">
-                                                        <option value="">Belum di Folder</option>
-
-                                                        @foreach ($folders as $folder)
-                                                            <option value="{{ $folder->id }}">
-                                                                {{ $folder->nama_perusahaan }} -
-                                                                {{ $folder->nama_kasus }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label>Status Kasus</label>
-                                                    <select name="status_kasus" class="form-select">
-                                                        <option value="Pending"
-                                                            {{ $item->status_kasus == 'Pending' ? 'selected' : '' }}>
-                                                            Pending</option>
-                                                        <option value="Tindak Lanjut"
-                                                            {{ $item->status_kasus == 'Tindak Lanjut' ? 'selected' : '' }}>
-                                                            Tindak Lanjut
-                                                        </option>
-                                                        <option value="Selesai"
-                                                            {{ $item->status_kasus == 'Selesai' ? 'selected' : '' }}>
-                                                            Selesai</option>
-                                                    </select>
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label>Divisi</label>
-                                                    <select name="divisi" class="form-select">
-                                                        <option value="Hubker"
-                                                            {{ $item->divisi == 'Hubker' ? 'selected' : '' }}>Hubker
-                                                        </option>
-                                                        <option value="K3"
-                                                            {{ $item->divisi == 'K3' ? 'selected' : '' }}>K3</option>
-                                                        <option value="Penyidikan"
-                                                            {{ $item->divisi == 'Penyidikan' ? 'selected' : '' }}>
-                                                            Penyidikan</option>
-                                                        <option value="Perempuan & Anak"
-                                                            {{ $item->divisi == 'Perempuan & Anak' ? 'selected' : '' }}>
-                                                            Perempuan & Anak
-                                                        </option>
-                                                        <option value="WKWI"
-                                                            {{ $item->divisi == 'WKWI' ? 'selected' : '' }}>WKWI
-                                                        </option>
-                                                        <option value="TU"
-                                                            {{ $item->divisi == 'TU' ? 'selected' : '' }}>TU</option>
-                                                    </select>
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label>Upload File (Jika ingin mengganti)</label>
-                                                    <input name="file_upload" type="file" class="form-control"
-                                                        accept=".pdf,.jpg,.png">
-                                                </div>
-
-                                            </div>
-
-                                            <div class="modal-footer">
-                                                <button class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Tutup</button>
-                                                <button class="btn btn-primary">Simpan Perubahan</button>
-                                            </div>
-
-                                        </form>
-
-                                    </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label>Nomor Berkas</label>
+                                    <input name="nomor_berkas" type="text" class="form-control"
+                                        value="{{ $item->nomor_berkas }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Nomor Item Arsip</label>
+                                    <input name="nomor_item_arsip" type="text" class="form-control"
+                                        value="{{ $item->nomor_item_arsip }}">
                                 </div>
                             </div>
+
+                            <h6>KODE KLASIFIKASI</h6>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label>Kode</label>
+                                    <input name="kode_klasifikasi" type="text" class="form-control"
+                                        value="{{ $item->kode_klasifikasi }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Nama Klasifikasi</label>
+                                    <input name="nama_klasifikasi" type="text" class="form-control"
+                                        value="{{ $item->nama_klasifikasi }}">
+                                </div>
+                            </div>
+
+                            <h6>JUDUL ITEM ARSIP</h6>
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label>Nomor Surat</label>
+                                    <input name="nomor_surat" type="text" class="form-control"
+                                        value="{{ $item->nomor_surat }}">
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Tanggal</label>
+                                    <input name="tanggal_surat" type="date" class="form-control"
+                                        value="{{ $item->tanggal_surat }}">
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Jenis Surat</label>
+                                    <select name="jenis_surat" class="form-select">
+                                        <option value="Surat Masuk"
+                                            {{ $item->jenis_surat == 'Surat Masuk' ? 'selected' : '' }}>Surat Masuk
+                                        </option>
+                                        <option value="Surat Dinas"
+                                            {{ $item->jenis_surat == 'Surat Dinas' ? 'selected' : '' }}>Surat Dinas
+                                        </option>
+                                        <option value="NP" {{ $item->jenis_surat == 'NP' ? 'selected' : '' }}>Nota
+                                            Pemeriksaan</option>
+                                        <option value="SPT" {{ $item->jenis_surat == 'SPT' ? 'selected' : '' }}>
+                                            Surat Perintah Tugas</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label>Dari</label>
+                                    <input name="dari" type="text" class="form-control"
+                                        value="{{ $item->dari }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Ke</label>
+                                    <input name="ke" type="text" class="form-control"
+                                        value="{{ $item->ke }}">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Perihal</label>
+                                <input name="perihal" type="text" class="form-control"
+                                    value="{{ $item->perihal }}">
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label>Jumlah Lembar</label>
+                                    <input name="jumlah_lembar" type="number" class="form-control"
+                                        value="{{ $item->jumlah_lembar }}">
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Tingkat Perkembangan</label>
+                                    <select name="tingkat_perkembangan" class="form-select">
+                                        <option value="Asli"
+                                            {{ $item->tingkat_perkembangan == 'Asli' ? 'selected' : '' }}>Asli</option>
+                                        <option value="Copy"
+                                            {{ $item->tingkat_perkembangan == 'Copy' ? 'selected' : '' }}>Copy</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Klasifikasi Keamanan</label>
+                                    <select name="klasifikasi_keamanan" class="form-select">
+                                        <option value="Biasa"
+                                            {{ $item->klasifikasi_keamanan == 'Biasa' ? 'selected' : '' }}>Biasa
+                                        </option>
+                                        <option value="Rahasia"
+                                            {{ $item->klasifikasi_keamanan == 'Rahasia' ? 'selected' : '' }}>Rahasia
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label>Hak Akses</label>
+                                    <select name="hak_akses" class="form-select">
+                                        <option value="Internal"
+                                            {{ $item->hak_akses == 'Internal' ? 'selected' : '' }}>Internal</option>
+                                        <option value="Publik" {{ $item->hak_akses == 'Publik' ? 'selected' : '' }}>
+                                            Publik</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Akses Publik</label>
+                                    <select name="akses_publik" class="form-select">
+                                        <option value="Ya" {{ $item->akses_publik == 'Ya' ? 'selected' : '' }}>Ya
+                                        </option>
+                                        <option value="Tidak" {{ $item->akses_publik == 'Tidak' ? 'selected' : '' }}>
+                                            Tidak</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Dasar Pertimbangan</label>
+                                    <input name="dasar_pertimbangan" class="form-control"
+                                        value="{{ $item->dasar_pertimbangan }}">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Link Tautan</label>
+                                <input name="link_tautan" type="text" class="form-control"
+                                    value="{{ $item->link_tautan }}">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Status Folder</label>
+                                <select name="status_folder" class="form-select">
+                                    <option value="Belum di Folder"
+                                        {{ $item->status_folder == 'Belum di Folder' ? 'selected' : '' }}>Belum di
+                                        Folder</option>
+                                    <option value="Sudah di Folder"
+                                        {{ $item->status_folder == 'Sudah di Folder' ? 'selected' : '' }}>Sudah di
+                                        Folder</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Status Kasus</label>
+                                <select name="status_kasus" class="form-select">
+                                    <option value="Pending" {{ $item->status_kasus == 'Pending' ? 'selected' : '' }}>
+                                        Pending</option>
+                                    <option value="Tindak Lanjut"
+                                        {{ $item->status_kasus == 'Tindak Lanjut' ? 'selected' : '' }}>Tindak Lanjut
+                                    </option>
+                                    <option value="Selesai" {{ $item->status_kasus == 'Selesai' ? 'selected' : '' }}>
+                                        Selesai</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Divisi</label>
+                                <select name="divisi" class="form-select">
+                                    <option value="Hubker" {{ $item->divisi == 'Hubker' ? 'selected' : '' }}>Hubker
+                                    </option>
+                                    <option value="K3" {{ $item->divisi == 'K3' ? 'selected' : '' }}>K3</option>
+                                    <option value="Penyidikan" {{ $item->divisi == 'Penyidikan' ? 'selected' : '' }}>
+                                        Penyidikan</option>
+                                    <option value="Perempuan & Anak"
+                                        {{ $item->divisi == 'Perempuan & Anak' ? 'selected' : '' }}>Perempuan & Anak
+                                    </option>
+                                    <option value="WKWI" {{ $item->divisi == 'WKWI' ? 'selected' : '' }}>WKWI
+                                    </option>
+                                    <option value="TU" {{ $item->divisi == 'TU' ? 'selected' : '' }}>TU</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Upload File (Jika ingin mengganti)</label>
+                                <input name="file_upload" type="file" class="form-control"
+                                    accept=".pdf,.jpg,.png">
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                            <button class="btn btn-primary">Simpan Perubahan</button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
 
                         </tr>
                     @empty

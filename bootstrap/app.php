@@ -11,8 +11,18 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        // Middleware bawaan Laravel Breeze
+        $middleware->web(append: [
+            \Illuminate\Session\Middleware\AuthenticateSession::class,
+        ]);
+
+        // Middleware untuk melindungi route dengan 'auth'
+        $middleware->alias([
+            'auth' => \App\Http\Middleware\Authenticate::class,
+            'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();
+    })
+    ->create();

@@ -26,7 +26,8 @@
                 <button class="btn btn-outline-secondary btn-sm me-3" id="toggleSidebar">
                     <i class="bi bi-list"></i>
                 </button>
-                <h4 class="mb-0 fw-bold">DOKUMEN SEMUA SURAT</h4>
+                <h4 class="mb-0 fw-bold">SEMUA DOKUMEN</h4>
+                <td><span class="badge bg-light text-dark">Total Surat : {{ $arsip->count() }}</span></td>
             </div>
             <div class="d-flex align-items-center">
                 <button class="btn btn-light btn-sm me-2">
@@ -42,7 +43,7 @@
         <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
             <!-- Judul -->
             <div>
-                <h5 class="fw-bold mb-1">Dokumen Semua Surat </h5>
+                <h5 class="fw-bold mb-1">Dokumen Semua Surat</h5>
                 <small class="text-muted">Kelola semua dokumen dan surat</small>
             </div>
 
@@ -59,17 +60,12 @@
                 </a>
 
                 <!-- Tambah Dokumen -->
-                {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                     data-bs-target="#tambahSuratMasukModal">
-                    <i class="bi bi-plus-circle me-2"></i> Tambah Dokumen
-                </button> --}}
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahSuratMasukModal">
                     <i class="bi bi-plus-circle me-2"></i> Tambah Dokumen
                 </button>
             </div>
         </div>
-
-
 
         <!-- Modal Tambah Dokumen -->
         <div class="modal fade" id="tambahSuratMasukModal" tabindex="-1">
@@ -197,9 +193,14 @@
 
                             <div class="mb-3">
                                 <label>Status Folder</label>
-                                <select name="status_folder" class="form-select">
-                                    <option value="Belum di Folder">Belum di Folder</option>
-                                    <option value="Sudah di Folder">Sudah di Folder</option>
+                                <select name="folder_id" class="form-select">
+                                    <option value="">Belum di Folder</option>
+
+                                    @foreach ($folders as $folder)
+                                        <option value="{{ $folder->id }}">
+                                            {{ $folder->nama_perusahaan }} - {{ $folder->nama_kasus }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
 
@@ -242,17 +243,13 @@
             </div>
         </div>
 
-
-
-
-
         <!-- Search + Filter -->
         @include('components.filterbox')
 
 
         <!-- Table -->
         <div class="table-scroll-wrapper">
-            <table class="table table-bordered align-middle text-center">
+            <table id="myTable" class="table table-bordered align-middle text-center">
                 <thead class="table-secondary align-middle">
                     <tr>
                         <th rowspan="2">Nomor Berkas</th>
@@ -283,7 +280,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($arsip as $item)
+                    @forelse ($arsip->where('divisi') as $item)
                         <tr>
                             <td>{{ $item->nomor_berkas }}</td>
                             <td>{{ $item->nomor_item_arsip }}</td>
@@ -295,7 +292,7 @@
                             </td>
 
                             <td>{{ $item->nomor_surat }}</td>
-                            <td>{{ $item->tanggal_surat }}</td>
+                            <td class="tanggal_surat">{{ $item->tanggal_surat }}</td>
                             <td>{{ $item->jenis_surat }}</td>
 
                             <td class="text-truncate" style="max-width: 120px;" title="{{ $item->dari }}">
@@ -321,15 +318,9 @@
                                 </a>
                             </td>
 
-                            <td>
-                                @if ($item->folder_id == null)
-                                    Belum di Folder
-                                @else
-                                    {{ $item->folder->nama_perusahaan }} - {{ $item->folder->nama_kasus }}
-                                @endif
-                            </td>
+                            <td>{{ $item->status_folder }}</td>
 
-                            <td>
+                            <td class="status_kasus">
                                 @if ($item->status_kasus == 'Pending')
                                     <span class="badge bg-warning text-dark">Pending</span>
                                 @elseif ($item->status_kasus == 'Tindak Lanjut')
@@ -541,16 +532,28 @@
 
                                                 <div class="mb-3">
                                                     <label>Status Folder</label>
-                                                    <select name="folder_id" class="form-select">
-                                                        <option value="">Belum di Folder</option>
-
+                                                    {{-- <select name="status_folder" class="form-select">
+                                                        <option value="Belum di Folder"
+                                                            {{ $item->status_folder == 'Belum di Folder' ? 'selected' : '' }}>
+                                                            Belum di
+                                                            Folder</option>
+                                                        <option value="Sudah di Folder"
+                                                            {{ $item->status_folder == 'Sudah di Folder' ? 'selected' : '' }}>
+                                                            Sudah di
+                                                            Folder</option>
+                                                    </select> --}}
+                                                    <select name="folder_id" class="form-select" required>
                                                         @foreach ($folders as $folder)
+                                                            {{-- <option value="Belum di Folder"
+                                                                {{ $item->status_folder == 'Belum di Folder' ? 'selected' : '' }}>
+                                                                Belum di
+                                                                Folder</option> --}}
                                                             <option value="{{ $folder->id }}">
-                                                                {{ $folder->nama_perusahaan }} -
-                                                                {{ $folder->nama_kasus }}
+                                                                {{ $folder->nama_perusahaan }}
                                                             </option>
                                                         @endforeach
                                                     </select>
+
                                                 </div>
 
                                                 <div class="mb-3">
@@ -571,26 +574,16 @@
 
                                                 <div class="mb-3">
                                                     <label>Divisi</label>
-                                                    <select name="divisi" class="form-select">
-                                                        <option value="Hubker"
-                                                            {{ $item->divisi == 'Hubker' ? 'selected' : '' }}>Hubker
-                                                        </option>
-                                                        <option value="K3"
-                                                            {{ $item->divisi == 'K3' ? 'selected' : '' }}>K3</option>
-                                                        <option value="Penyidikan"
-                                                            {{ $item->divisi == 'Penyidikan' ? 'selected' : '' }}>
-                                                            Penyidikan</option>
-                                                        <option value="Perempuan & Anak"
-                                                            {{ $item->divisi == 'Perempuan & Anak' ? 'selected' : '' }}>
-                                                            Perempuan & Anak
-                                                        </option>
-                                                        <option value="WKWI"
-                                                            {{ $item->divisi == 'WKWI' ? 'selected' : '' }}>WKWI
-                                                        </option>
-                                                        <option value="TU"
-                                                            {{ $item->divisi == 'TU' ? 'selected' : '' }}>TU</option>
+
+                                                    <select class="form-select" disabled>
+                                                        <option selected>{{ $item->divisi }}</option>
                                                     </select>
+
+                                                    <!-- nilai asli tetap dikirim -->
+                                                    <input type="hidden" name="divisi"
+                                                        value="{{ $item->divisi }}">
                                                 </div>
+
 
                                                 <div class="mb-3">
                                                     <label>Upload File (Jika ingin mengganti)</label>

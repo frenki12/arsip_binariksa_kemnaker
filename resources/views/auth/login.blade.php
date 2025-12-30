@@ -3,7 +3,7 @@
 
     <div class="login-wrapper flex min-h-screen w-full">
         <!-- Kiri -->
-        <div class="login-left hidden md:flex flex-col justify-center items-center w-1/2 bg-cover bg-center relative text-white"
+        <div class="login-left hidden md:flex flex-col justify-center items-center w-1/2 bg-cover bg-[position:80%_center] relative text-white"
             style="background-image: url('{{ asset('img/gedung_kemnaker.jpg') }}');">
             <div class="overlay"></div>
             <div class="relative z-10 text-center px-10">
@@ -31,7 +31,8 @@
                     <!-- Email -->
                     <div class="mb-4">
                         <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input id="email" name="email" type="email" value="{{ old('email') }}" required autofocus
+                        <input id="email" name="email" type="email" value="{{ old('email') }}" required
+                            autofocus
                             class="w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
 
@@ -75,7 +76,7 @@
                     <div class="mt-4 text-center text-gray-500 text-sm">atau</div>
 
                     <!-- Google Button -->
-                    <a href="#" class="mt-3 google-btn">
+                    <a href="{{ route('google.login') }}" class="mt-3 google-btn">
                         <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
                         Masuk dengan Google
                     </a>

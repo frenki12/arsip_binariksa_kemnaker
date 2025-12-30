@@ -10,10 +10,14 @@
     <!-- Bagian menu scrollable -->
     <div class="sidebar-menu flex-grow-1 overflow-auto">
         <ul class="nav flex-column">
-            <li class="nav-item"><a href="/administrator/dashboard_admin" class="nav-link"><i class="bi bi-house"></i> <span>Dashboard</span></a></li>
-            <li class="nav-item"><a href="/administrator/suratmasuk_admin" class="nav-link"><i class="bi bi-envelope"></i> <span>Surat Masuk</span></a></li>
-            <li class="nav-item"><a href="/administrator/suratkeluar_admin" class="nav-link"><i class="bi bi-send"></i> <span>Surat Keluar</span></a></li>
-            <li class="nav-item"><a href="/administrator/folder_admin" class="nav-link"><i class="bi bi-folder"></i> <span>Folder Surat</span></a></li>
+            <li class="nav-item"><a href="/administrator/dashboard_admin" class="nav-link"><i class="bi bi-house"></i>
+                    <span>Dashboard</span></a></li>
+            <li class="nav-item"><a href="/administrator/suratmasuk_admin" class="nav-link"><i
+                        class="bi bi-envelope"></i> <span>Surat Masuk</span></a></li>
+            <li class="nav-item"><a href="/administrator/suratkeluar_admin" class="nav-link"><i class="bi bi-send"></i>
+                    <span>Surat Keluar</span></a></li>
+            <li class="nav-item"><a href="/administrator/folder_admin" class="nav-link"><i class="bi bi-folder"></i>
+                    <span>Folder Surat</span></a></li>
             <li class="nav-item">
                 <a class="nav-link d-flex align-items-center" id="dokumenToggle" href="javascript:void(0)">
                     <i class="bi bi-folder me-2"></i>
@@ -21,29 +25,58 @@
                     <i class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul class="list-unstyled ps-4" id="submenuDokumen">
-                    <li><a href="/administrator/dokumen_admin" class="nav-link">TU</a></li>
-                    <li><a href="/administrator/dokumen_k3" class="nav-link">NORMA K3</a></li>
-                    <li><a href="/administrator/dokumen_hubker" class="nav-link">HUBKER</a></li>
-                    <li><a href="/administrator/dokumen_wkwi" class="nav-link">WKWI</a></li>
-                    <li><a href="/administrator/dokumen_penyidikan" class="nav-link">PENYIDIKAN</a></li>
-                    <li><a href="/administrator/dokumen_perempuan_anak" class="nav-link">PEREMPUAN & ANAK</a></li>
+                    <li><a href="{{ route('dokumen.divisi', 'semua') }}"class="nav-link">SEMUA</a></li>
+                    <li><a href="{{ route('dokumen.divisi', 'k3') }}"class="nav-link">K3</a></li>
+                    <li><a href="{{ route('dokumen.divisi', 'hubker') }}"class="nav-link">Hubker</a></li>
+                    <li><a href="{{ route('dokumen.divisi', 'wkwi') }}"class="nav-link">WKWI</a></li>
+                    <li><a href="{{ route('dokumen.divisi', 'tu') }}"class="nav-link">TU</a></li>
+                    <li><a href="{{ route('dokumen.divisi', 'penyidikan') }}"class="nav-link">Penyidikan</a></li>
+                    <li><a href="{{ route('dokumen.divisi', 'perempuan_anak') }}"class="nav-link">Perempuan & Anak</a>
+                    </li>
                 </ul>
             </li>
-            <li class="nav-item"><a href="/administrator/kategori_admin" class="nav-link"><i class="bi bi-tags"></i> <span>Kategori</span></a></li>
-            <li class="nav-item"><a href="/administrator/laporan_admin" class="nav-link"><i class="bi bi-graph-up"></i> <span>Laporan</span></a></li>
-            <li class="nav-item"><a href="/administrator/pengguna_admin" class="nav-link"><i class="bi bi-people"></i> <span>Pengguna</span></a></li>
+            <li class="nav-item"><a href="/administrator/kategori_admin" class="nav-link"><i class="bi bi-tags"></i>
+                    <span>Kategori</span></a></li>
+            <li class="nav-item"><a href="/administrator/laporan_admin" class="nav-link"><i class="bi bi-graph-up"></i>
+                    <span>Laporan</span></a></li>
+            <li class="nav-item"><a href="/administrator/pengguna_admin" class="nav-link"><i class="bi bi-people"></i>
+                    <span>Pengguna</span></a></li>
         </ul>
     </div>
 
     <!-- Bagian bawah tetap -->
     <div class="sidebar-footer mt-auto pt-3 border-top">
         <div class="d-flex align-items-center">
-            <div class="rounded-circle bg-primary text-white p-2 me-2">AD</div>
-            <div>
-                <span>Administrator</span><br>
-                <small class="badge bg-primary">Admin</small>
+            @php
+                $nama = Auth::user()->name;
+                $inisial = collect(explode(' ', $nama))
+                    ->map(fn($kata) => strtoupper(substr($kata, 0, 1)))
+                    ->take(2)
+                    ->implode('');
+            @endphp
+
+            <div class="d-flex align-items-center">
+                <div class="rounded-circle bg-primary text-white p-2 me-2 fw-bold">
+                    {{ $inisial }}
+                </div>
+                <div>
+                    <span>{{ $nama }}</span><br>
+                    <small class="badge bg-primary">
+                        {{ ucfirst(Auth::user()->role ?? 'Admin') }}
+                    </small>
+                </div>
             </div>
+
         </div>
-        <a href="#" class="btn btn-outline-danger btn-sm w-100 mt-3"><i class="bi bi-box-arrow-right"></i> Keluar</a>
     </div>
+    <a href="#" class="btn btn-outline-danger btn-sm w-100 mt-3"
+        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+        <i class="bi bi-box-arrow-right"></i> Keluar
+    </a>
+
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+        @csrf
+    </form>
+
+</div>
 </div>

@@ -16,13 +16,14 @@
                 <label class="form-label">Bulan</label>
                 <select class="form-select" id="bulanSelect">
                     <option selected disabled>Pilih Bulan</option>
-                    <option value="semua">Semua Bulan</option>
+                    <option value="semua" selected>Semua Bulan</option>
                 </select>
             </div>
             <div class="col-md-4">
                 <label class="form-label">Tahun</label>
-                <select class="form-select">
-                    <option selected disabled>Pilih Tahun</option>
+                <select class="form-select" id="tahunSelect">
+                    <option disabled>Pilih Tahun</option>
+                    <option value="semua" selected>Semua Tahun</option>
                     @for ($year = date('Y'); $year >= 1945; $year--)
                         <option value="{{ $year }}">{{ $year }}</option>
                     @endfor
@@ -31,11 +32,11 @@
 
             <div class="col-md-4">
                 <label class="form-label">Status</label>
-                <select class="form-select">
-                    <option selected disabled>Pilih status</option>
-                    <option>Selesai</option>
-                    <option>Tindak Lanjut</option>
-                    <option>Pending</option>
+                <select class="form-select" id="statusSelect">
+                    <option value="semua" selected>Pilih Status</option>
+                    <option value="selesai">Selesai</option>
+                    <option value="tindak lanjut">Tindak Lanjut</option>
+                    <option value="pending">Pending</option>
                 </select>
             </div>
         </div>

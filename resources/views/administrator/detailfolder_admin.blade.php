@@ -46,6 +46,7 @@
             </button>
         </div>
 
+        <input type="hidden" name="folder_id" value="{{ $folder->id }}">
 
         {{-- Field Surat Terbaru --}}
         <div class="card card-stat p-3 mt-4">
@@ -77,43 +78,38 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>001</td>
-                            <td>01/2024</td>
-                            <td>K3</td>
-                            <td>123/K3/2024</td>
-                            <td>2024-01-10</td>
-                            <td>Surat Masuk</td>
-                            <td>PT Maju Jaya</td>
-                            <td>Disnaker</td>
-                            <td>Permohonan Izin</td>
-                            <td>3</td>
-                            <td>Selesai</td>
-                            <td>Rahasia</td>
-                            <td>Internal</td>
-                            <td>Tidak</td>
-                            <td>UU Ketenagakerjaan</td>
-                            <td><a href="#" class="text-primary text-decoration-none">Lihat</a></td>
-                        </tr>
-                        <tr>
-                            <td>002</td>
-                            <td>02/2024</td>
-                            <td>HUBKER</td>
-                            <td>124/HUBKER/2024</td>
-                            <td>2024-01-12</td>
-                            <td>Surat Keluar</td>
-                            <td>Disnaker</td>
-                            <td>PT Sejahtera</td>
-                            <td>Balasan Pengaduan</td>
-                            <td>2</td>
-                            <td>Proses</td>
-                            <td>Terbuka</td>
-                            <td>Publik</td>
-                            <td>Ya</td>
-                            <td>Peraturan No. 5/2024</td>
-                            <td><a href="#" class="text-primary text-decoration-none">Lihat</a></td>
-                        </tr>
-                    </tbody>
+    @forelse($folder->arsip as $item)
+        <tr>
+            <td>{{ $item->nomor_berkas }}</td>
+            <td>{{ $item->nomor_item_arsip }}</td>
+            <td>{{ $item->kode_klasifikasi }}</td>
+            <td>{{ $item->nomor_surat }}</td>
+            <td>{{ $item->tanggal_surat }}</td>
+            <td>{{ $item->jenis_surat }}</td>
+            <td>{{ $item->dari }}</td>
+            <td>{{ $item->ke }}</td>
+            <td>{{ $item->perihal }}</td>
+            <td>{{ $item->jumlah_lembar }}</td>
+            <td>{{ $item->tingkat_perkembangan }}</td>
+            <td>{{ $item->klasifikasi_keamanan }}</td>
+            <td>{{ $item->hak_akses }}</td>
+            <td>{{ $item->akses_publik }}</td>
+            <td>{{ $item->dasar_pertimbangan }}</td>
+            <td>
+                @if($item->link_tautan)
+                    <a href="{{ $item->link_tautan }}" class="text-primary text-decoration-none">Lihat</a>
+                @else
+                    -
+                @endif
+            </td>
+        </tr>
+    @empty
+        <tr>
+            <td colspan="16" class="text-muted">Belum ada arsip di folder ini.</td>
+        </tr>
+    @endforelse
+</tbody>
+
                 </table>
             </div>
         </div>
